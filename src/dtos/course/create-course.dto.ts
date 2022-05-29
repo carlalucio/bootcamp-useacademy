@@ -3,7 +3,8 @@ import { RequestDto } from '../request-dto/request.dto';
 
 export class CreateCourseDto extends RequestDto {
   name!: string;
-
+  
+  
   static validators(): ValidationChain[] {
     return [
       body('name', 'Valor name não é uma string!').isString(),

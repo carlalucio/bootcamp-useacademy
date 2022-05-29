@@ -4,6 +4,9 @@ import { CourseController } from './controllers/course.controller';
 import { CategoryService } from './services/category.service';
 import { AppDataSource } from './config/data-source';
 import { CourseService } from './services/course.service';
+import { CreateCategoryDto } from './dtos/category/create-category.dto';
+import { validator } from './middlewares';
+import { body, validationResult } from 'express-validator';
 
 const routes = Router();
 
@@ -26,7 +29,8 @@ routes.get('/categories', (request: Request, response: Response, next: NextFunct
   });
   
   //Rota POST - para criar um novo recurso no Categories
-routes.post('/categories', (request: Request, response: Response,next: NextFunction) => {
+routes.post('/categories', CreateCategoryDto.validators(), validator, 
+  (request: Request, response: Response,next: NextFunction) => {
     categoryController.create(request, response).catch((error: Error) =>{
       next(error);
     })
@@ -40,11 +44,11 @@ routes.get('/categories/:id', (request: Request, response: Response,next: NextFu
 });
   
   //Rota PUT por ID (update) alterar categoria pr ID
-routes.put('/categories/:id', (request: Request, response: Response,next: NextFunction) => {
-  categoryController.update(request, response).catch((error: Error) =>{
-    next(error);
-  })
-});
+// routes.put('/categories/:id', (request: Request, response: Response,next: NextFunction) => {
+//   categoryController.update(request, response).catch((error: Error) =>{
+//     next(error);
+//   })
+// });
 
   
   //Rota DELETE por ID (delete) excluir uma categoria por ID
@@ -64,7 +68,7 @@ routes.get('/courses', (request: Request, response: Response, next: NextFunction
 });
 
 //Rota POST - para criar um novo recurso no Courses
-routes.post('/courses', (request: Request, response: Response,next: NextFunction) => {
+routes.post('/courses', CreateCategoryDto.validators(), (request: Request, response: Response,next: NextFunction) => {
   courseControler.create(request, response).catch((error: Error) =>{
     next(error);
   })
