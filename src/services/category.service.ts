@@ -5,14 +5,7 @@ import { CategoryEntity } from '../entities/category.entity';
 import { HttpException } from '../handler-exceptions/http-exception.provider';
 import { HttpStatus } from '../utils/enums/http-status.enum';
 
-import { AppDataSource } from '../config/data-source';
-import { CategoryController } from '../controllers/category.controller';
 
-
-// interface ICategory {
-//   id?: string,
-//   name: string,
-//   }
 
 
 export class CategoryService {

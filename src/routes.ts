@@ -8,6 +8,7 @@ import { CreateCategoryDto } from './dtos/category/create-category.dto';
 import { validator } from './middlewares';
 import { body, validationResult } from 'express-validator';
 import { CreatedCategoryDto } from './dtos/category/created-category.dto';
+import { CreateCourseDto } from './dtos/course/create-course.dto';
 
 const routes = Router();
 
@@ -51,15 +52,12 @@ routes.put('/categories/:id', (request: Request, response: Response,next: NextFu
   })
 });
 
-  
   //Rota DELETE por ID (delete) excluir uma categoria por ID
 routes.delete('/categories/:id', (request: Request, response: Response,next: NextFunction) => {
   categoryController.delete(request, response).catch((error: Error) =>{
     next(error);
   })
 });
-
-
 
 //Rota GET all Courses
 routes.get('/courses', (request: Request, response: Response, next: NextFunction) => {
@@ -69,7 +67,7 @@ routes.get('/courses', (request: Request, response: Response, next: NextFunction
 });
 
 //Rota POST - para criar um novo recurso no Courses
-routes.post('/courses', CreateCategoryDto.validators(), (request: Request, response: Response,next: NextFunction) => {
+routes.post('/courses', CreateCourseDto.validators(), validator,(request: Request, response: Response,next: NextFunction) => {
   courseControler.create(request, response).catch((error: Error) =>{
     next(error);
   })
