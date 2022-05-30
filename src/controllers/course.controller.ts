@@ -3,7 +3,7 @@ import { CreateCourseDto } from '../dtos/course/create-course.dto';
 import { CreatedCourseDto } from '../dtos/course/created-course.dto';
 import { CourseService } from '../services/course.service';
 import { HttpStatus } from '../utils/enums/http-status.enum';
-import {body} from 'express-validator'
+
 
 interface CreateCourseBody extends Request {
     body: CreateCourseDto;
@@ -16,7 +16,7 @@ export class CourseController {
         return response.status(HttpStatus.OK).json(courses);
     }
     
-    async create({ body: {name, description,value, image, disponibility, category_id }  }: CreateCourseBody, response: Response):Promise<Response<CreatedCourseDto>> {
+    async create({ body: {name, description,value, image, disponibility, category_id }}: CreateCourseBody, response: Response):Promise<Response<CreatedCourseDto>> {
         const createdCourse = await this.courseService.create({name, description,value, image, disponibility, category_id});
         return response.status(HttpStatus.CREATED).json(createdCourse);
     }

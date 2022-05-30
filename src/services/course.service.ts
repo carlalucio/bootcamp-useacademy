@@ -4,8 +4,8 @@ import { CreatedCourseDto} from '../dtos/course/created-course.dto';
 import { CourseEntity } from '../entities/course.entity';
 import { HttpException } from '../handler-exceptions/http-exception.provider';
 import { HttpStatus } from '../utils/enums/http-status.enum';
-import { AppDataSource } from '../config/data-source';
-import { CourseController } from '../controllers/course.controller';
+
+
 
 export class CourseService {
   private courseRepository: Repository<CourseEntity>;

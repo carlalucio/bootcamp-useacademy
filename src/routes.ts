@@ -6,8 +6,8 @@ import { AppDataSource } from './config/data-source';
 import { CourseService } from './services/course.service';
 import { CreateCategoryDto } from './dtos/category/create-category.dto';
 import { validator } from './middlewares';
-import { body, validationResult } from 'express-validator';
-import { CreatedCategoryDto } from './dtos/category/created-category.dto';
+
+
 import { CreateCourseDto } from './dtos/course/create-course.dto';
 
 const routes = Router();
