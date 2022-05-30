@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { request, Request, Response } from 'express';
 import { CreateCategoryDto } from '../dtos/category/create-category.dto';
 import { CreatedCategoryDto } from '../dtos/category/created-category.dto';
 import { CategoryService } from '../services/category.service';
 import { HttpStatus } from '../utils/enums/http-status.enum'
+import { body } from 'express-validator';
 
 interface ICategory {
   id?: string,
@@ -36,12 +37,13 @@ export class CategoryController {
     return response.status(HttpStatus.OK).json(category);
   }
 
-  // async update(request: Request, response: Response) {
-  //   const { id } = request.params;
-  //   const data = request.body;
-  //   const category = await this.categoryService.update(id, data );
-  //   return response.status(HttpStatus.NO_CONTENT).json(category);
-  // }
+  async update(request: Request, response: Response) :Promise<Response<CreateCategoryDto>>  
+  {
+    const { id } = request.params;
+    const {name} = request.body;
+    const category = await this.categoryService.update(id,name);
+    return response.status(HttpStatus.NO_CONTENT).json(category);
+  }
 
   async delete(request: Request, response: Response): Promise<Response<CreatedCategoryDto>> {
     const { id } = request.params;

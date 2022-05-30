@@ -7,6 +7,7 @@ import { CourseService } from './services/course.service';
 import { CreateCategoryDto } from './dtos/category/create-category.dto';
 import { validator } from './middlewares';
 import { body, validationResult } from 'express-validator';
+import { CreatedCategoryDto } from './dtos/category/created-category.dto';
 
 const routes = Router();
 
@@ -44,11 +45,11 @@ routes.get('/categories/:id', (request: Request, response: Response,next: NextFu
 });
   
   //Rota PUT por ID (update) alterar categoria pr ID
-// routes.put('/categories/:id', (request: Request, response: Response,next: NextFunction) => {
-//   categoryController.update(request, response).catch((error: Error) =>{
-//     next(error);
-//   })
-// });
+routes.put('/categories/:id', (request: Request, response: Response,next: NextFunction) => {
+  categoryController.update(request, response).catch((error: Error) =>{
+    next(error);
+  })
+});
 
   
   //Rota DELETE por ID (delete) excluir uma categoria por ID

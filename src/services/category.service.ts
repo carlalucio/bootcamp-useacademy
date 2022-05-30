@@ -4,7 +4,9 @@ import { CreatedCategoryDto } from '../dtos/category/created-category.dto';
 import { CategoryEntity } from '../entities/category.entity';
 import { HttpException } from '../handler-exceptions/http-exception.provider';
 import { HttpStatus } from '../utils/enums/http-status.enum';
-import { body } from 'express-validator';
+
+import { AppDataSource } from '../config/data-source';
+import { CategoryController } from '../controllers/category.controller';
 
 
 // interface ICategory {
@@ -39,30 +41,24 @@ export class CategoryService {
     }
   }
    
-  async show(id:string): Promise<CreatedCategoryDto>{
+  async show(id:string): Promise<any>{
     const category = await this.categoryRepository.findOne({where:{id}});
-    if (category)
-    return new CreatedCategoryDto({id: category.id, name: category.name})
-    else return new CategoryEntity(); 
+    if (category) return new CreatedCategoryDto({id: category.id, name: category.name});
+    else return new HttpException('Houve um erro ao listar a catgoria', HttpStatus.BAD_REQUEST)
   }
 
   
-  // async update (id:string, name: string ): Promise<CreatedCategoryDto>{
-  //   try {
-  //     await this.categoryRepository.update(name,  );
-    
-  //     // await this.categoryRepository.preload({
-  //     //   id:id,
-  //     //   ...category})      
-  //     return new CreatedCategoryDto (new CategoryEntity());
-        
-  //   }catch (error) {
-  //     throw new HttpException('Houve um erro ao atualizar categoria!', HttpStatus.BAD_REQUEST);
-  //   }
-  // }
+
+async update( id: string, name: string): Promise<any>{
+    try{
+      await this.categoryRepository.update(id, {name})
+      return this.categoryRepository.findOne({where:{id}});
+    } catch (error) {
+      throw new HttpException('Houve um erro ao atualizar categoria!', HttpStatus.BAD_REQUEST);
+    }
   
-  
-  async delete(id:string): Promise<CreatedCategoryDto>{
+}
+async delete(id:string): Promise<CreatedCategoryDto>{
     try {
       const category = await this.categoryRepository.findOne({where:{id}});
       if(category)
