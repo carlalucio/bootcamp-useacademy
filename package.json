@@ -2,7 +2,7 @@
   "name": "bootcamp-api",
   "version": "1.0.0",
   "description": "Projeto backend da trilha de fullstack do bootcamp Use Academy",
-  "main": "index.js",
+  "main": "dist/server.js",
   "engines": {
     "node": "17.x",
     "npm": "8.x"
