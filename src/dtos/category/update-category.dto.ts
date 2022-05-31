@@ -1,0 +1,11 @@
+
+import {body, ValidationChain} from 'express-validator';
+import { CreateCategoryDto } from './create-category.dto';
+
+export class UpdateCategoryDto extends CreateCategoryDto{
+    static validators(): ValidationChain[] {
+        return [
+          body('name', 'Valor name não é uma string!').isString(),
+        ];
+      }
+}

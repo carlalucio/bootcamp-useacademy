@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { CategoryEntity } from './category.entity';
 
 @Entity({ name: 'courses' })
 export class CourseEntity {
@@ -20,6 +21,10 @@ export class CourseEntity {
   @Column({ type: 'boolean', nullable: false })
   disponibility!: boolean;
 
-  @Column({ type: 'varchar', nullable: false })
-  category_id!: string;
+ @ManyToOne(()=>CategoryEntity,(category)=>category.courses,{
+   onDelete: 'CASCADE', 
+   nullable: false,})
+ @JoinColumn({name: 'category_id', referencedColumnName:'id'})
+ category!: CategoryEntity
+  
 }

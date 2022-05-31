@@ -34,29 +34,32 @@ export class CategoryService {
     }
   }
    
-  async show(id:string): Promise<any>{
-    const category = await this.categoryRepository.findOne({where:{id}});
-    if (category) return new CreatedCategoryDto({id: category.id, name: category.name});
-    else return new HttpException('Houve um erro ao listar a catgoria', HttpStatus.BAD_REQUEST)
+  async show(id:string): Promise<CreatedCategoryDto>{
+    try {
+      const category = await this.categoryRepository.findOne({where:{id}});
+      if(!category){
+          throw new HttpException('Categoria não encontrada', HttpStatus.BAD_REQUEST)
+      } return new CreatedCategoryDto(category)
+    } catch (error) {
+      throw new HttpException('Houve um erro ao listar a catgoria', HttpStatus.BAD_REQUEST)
+    }
   }
 
-  
-
-async update( id: string, name: string): Promise<any>{
+async update( id: string, name: string): Promise<void>{
     try{
       await this.categoryRepository.update(id, {name})
-      return this.categoryRepository.findOne({where:{id}});
-    } catch (error) {
+      } catch (error) {
       throw new HttpException('Houve um erro ao atualizar categoria!', HttpStatus.BAD_REQUEST);
     }
-  
 }
+
 async delete(id:string): Promise<CreatedCategoryDto>{
     try {
       const category = await this.categoryRepository.findOne({where:{id}});
-      if(category)
-      await this.categoryRepository.delete(id);
-      return new CategoryEntity();
+      if(!category){
+        throw new HttpException('Categoria não encontrada', HttpStatus.BAD_REQUEST)
+      } await this.categoryRepository.delete(id);
+        return new CategoryEntity();
     } catch (error) {
       throw new HttpException('Houve um erro ao excluir categoria!', HttpStatus.BAD_REQUEST);
     }

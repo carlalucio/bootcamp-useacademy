@@ -8,13 +8,13 @@ import { env } from '../environment-variables';
 
 const storageTypes: Record<string, StorageEngine> = {
   local: diskStorage({
-    destination: (_req: Request, _file: Express.Multer.File, cb: any) => {
+    destination: (_req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string)=>void) => {
       cb(null, resolve(__dirname, '..', '..', '..', 'uploads'));
     },
-    filename: (_req, file: Express.Multer.File, cb: any) => {
+    filename: (_req, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
       randomBytes(16, (err: Error | null, hash: Buffer) => {
-        if (err) cb(err);
         file.filename = `${hash.toString('hex')}-${file.originalname}`;
+        if (err) cb(err, file.filename);        
         cb(null, file.filename);
       });
     },

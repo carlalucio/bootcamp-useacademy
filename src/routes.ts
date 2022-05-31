@@ -4,11 +4,14 @@ import { CourseController } from './controllers/course.controller';
 import { CategoryService } from './services/category.service';
 import { AppDataSource } from './config/data-source';
 import { CourseService } from './services/course.service';
-import { CreateCategoryDto } from './dtos/category/create-category.dto';
 import { validator } from './middlewares';
 
 
 import { CreateCourseDto } from './dtos/course/create-course.dto';
+import { UpdateCategoryDto } from './dtos/category/update-category.dto';
+import multer from 'multer';
+import { multerConfig } from './config/multer';
+import { UpdateCourseDto } from './dtos/course/update-course.dto';
 
 const routes = Router();
 
@@ -31,7 +34,7 @@ routes.get('/categories', (request: Request, response: Response, next: NextFunct
   });
   
   //Rota POST - para criar um novo recurso no Categories
-routes.post('/categories', CreateCategoryDto.validators(), validator, 
+routes.post('/categories', UpdateCategoryDto.validators(), validator, 
   (request: Request, response: Response,next: NextFunction) => {
     categoryController.create(request, response).catch((error: Error) =>{
       next(error);
@@ -46,7 +49,7 @@ routes.get('/categories/:id', (request: Request, response: Response,next: NextFu
 });
   
   //Rota PUT por ID (update) alterar categoria pr ID
-routes.put('/categories/:id', (request: Request, response: Response,next: NextFunction) => {
+routes.put('/categories/:id', UpdateCategoryDto.validators(), validator,(request: Request, response: Response,next: NextFunction) => {
   categoryController.update(request, response).catch((error: Error) =>{
     next(error);
   })
@@ -67,7 +70,7 @@ routes.get('/courses', (request: Request, response: Response, next: NextFunction
 });
 
 //Rota POST - para criar um novo recurso no Courses
-routes.post('/courses', CreateCourseDto.validators(), validator,(request: Request, response: Response,next: NextFunction) => {
+routes.post('/courses', multer(multerConfig).single('image'), CreateCourseDto.validators(), validator,(request: Request, response: Response,next: NextFunction) => {
   courseControler.create(request, response).catch((error: Error) =>{
     next(error);
   })
@@ -83,7 +86,7 @@ routes.get('/courses/:id', (request: Request, response: Response,next: NextFunct
 
 
  //Rota PUT por ID (update) alterar Curso pr ID
-routes.put('/courses/:id', (request: Request, response: Response,next: NextFunction) => {
+routes.put('/courses/:id',multer(multerConfig).single('image'), UpdateCourseDto.validators(), validator, (request: Request, response: Response,next: NextFunction) => {
   courseControler.update(request, response).catch((error: Error) =>{
     next(error);
   }) 

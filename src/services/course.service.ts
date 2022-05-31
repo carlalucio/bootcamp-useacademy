@@ -16,44 +16,62 @@ export class CourseService {
 
   async getAll(): Promise<CreatedCourseDto[]> {
     try {
-      const courses = await this.courseRepository.find();
+      const courses = await this.courseRepository.find({relations: ["category"]});
       return courses.map((course) => new CreatedCourseDto(course));
     } catch (error) {
-      throw new HttpException('Houve um erro ao listar os cursos!', HttpStatus.BAD_REQUEST,);
+      throw new HttpException('Houve um erro ao listar os cursos!', HttpStatus.BAD_REQUEST);
     }
   }
-
-  async create({ name, description, value, image, disponibility, category_id  }: CreateCourseDto): Promise<CreatedCourseDto> {
+  
+  async create({categoryId, description, disponibility, image, name, value,}: CreateCourseDto): Promise<CreatedCourseDto> {
     try {
-      const createCourse = this.courseRepository.create({name, description, value, image, disponibility, category_id});
-      const savedCourse = await this.courseRepository.save(createCourse);
-      return new CreatedCourseDto(savedCourse);
+      const createCourse = this.courseRepository.create({
+        category: { id: categoryId },
+        description,
+        disponibility,
+        image,
+        name,
+        value,
+      });
+      const saveCourse = await this.courseRepository.save(createCourse);
+      return new CreatedCourseDto(saveCourse);
     } catch (error) {
-      throw new HttpException('Houve um erro ao adicionar o curso!', HttpStatus.BAD_REQUEST);
+      console.log(error);
+      throw new HttpException(
+        "Houve um erro ao cadastrar curso!",
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
+   
+  async show(id:string): Promise<CreatedCourseDto>{
+    try {
+      const course = await this.courseRepository.findOne({relations: ['category'], where:{id}});
+      if(!course){
+        throw new HttpException('Curso não encontrado!', HttpStatus.NOT_FOUND)
+      }
+      return new CreatedCourseDto(course);
+    } catch (error) {
+      throw new HttpException('Houve um erro ao listar o curso', HttpStatus.BAD_REQUEST)
+    }
+  }  
+   
 
-  async show(id:string): Promise<any>{
-    const course = await this.courseRepository.findOne({where:{id}});
-    if (course) return new CreatedCourseDto(course);
-    else return new HttpException('Houve um erro ao listar o curso', HttpStatus.BAD_REQUEST)
-  }
-
-  async update( id: string, name: string, description: string,value: number, image: string, disponibility: boolean, category_id: string ): Promise<any>{
+  async update( id: string,{name, description,value, image, disponibility, categoryId}: CreateCourseDto): Promise<void>{
     try{
-      await this.courseRepository.update(id, {name, description, value, image, disponibility, category_id})
-      return this.courseRepository.findOne({where:{id}});
+      await this.courseRepository.update(id, {name, description, value, image, disponibility, category:{ id: categoryId}});
     } catch (error) {
       throw new HttpException('Houve um erro ao atualizar curso!', HttpStatus.BAD_REQUEST);
     }
   
 }
-  async delete(id:string): Promise<CreatedCourseDto>{
+  async delete(id:string): Promise<void>{
     try {
       const course = await this.courseRepository.findOne({where:{id}});
-      if(course)
+      if(!course){
+        throw new HttpException('Curso não encontrado!', HttpStatus.NOT_FOUND)
+      }
       await this.courseRepository.delete(id);
-      return new CourseEntity();
     } catch (error) {
       throw new HttpException('Houve um erro ao excluir curso!', HttpStatus.BAD_REQUEST);
     }

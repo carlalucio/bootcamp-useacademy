@@ -3,6 +3,7 @@ import { CreateCategoryDto } from '../dtos/category/create-category.dto';
 import { CreatedCategoryDto } from '../dtos/category/created-category.dto';
 import { CategoryService } from '../services/category.service';
 import { HttpStatus } from '../utils/enums/http-status.enum'
+import { UpdateCategoryDto } from '../dtos/category/update-category.dto';
 
 
 interface CreateCategoryBody extends Request {
@@ -28,11 +29,9 @@ export class CategoryController {
     return response.status(HttpStatus.OK).json(category);
   }
 
-  async update(request: Request, response: Response) :Promise<Response<CreatedCategoryDto>>  
+  async update({body: category, params}: Request, response: Response) :Promise<Response<void>>  
   {
-    const { id } = request.params;
-    const {name} = request.body;
-    const category = await this.categoryService.update(id,name);
+    await this.categoryService.update(params.id, category.name);
     return response.status(HttpStatus.NO_CONTENT).json(category);
   }
 
