@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { env } from './environment-variables';
 
 //Esse é o nosso arquivo de configuração TypeORM
-const development = env.NODE_ENV === 'production';
+const development = env.NODE_ENV === 'development';
 
 export const AppDataSource = new DataSource({
   type: 'sqlite',
