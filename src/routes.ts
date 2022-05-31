@@ -12,6 +12,7 @@ import { UpdateCategoryDto } from './dtos/category/update-category.dto';
 import multer from 'multer';
 import { multerConfig } from './config/multer';
 import { UpdateCourseDto } from './dtos/course/update-course.dto';
+import { CreateCategoryDto } from './dtos/category/create-category.dto';
 
 const routes = Router();
 
@@ -34,7 +35,7 @@ routes.get('/categories', (request: Request, response: Response, next: NextFunct
   });
   
   //Rota POST - para criar um novo recurso no Categories
-routes.post('/categories', UpdateCategoryDto.validators(), validator, 
+routes.post('/categories', CreateCategoryDto.validators(), validator, 
   (request: Request, response: Response,next: NextFunction) => {
     categoryController.create(request, response).catch((error: Error) =>{
       next(error);

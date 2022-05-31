@@ -1,6 +1,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { CreateCourseDto } from '../dtos/course/create-course.dto';
 import { CreatedCourseDto} from '../dtos/course/created-course.dto';
+import { UpdateCourseDto } from '../dtos/course/update-course.dto';
 import { CourseEntity } from '../entities/course.entity';
 import { HttpException } from '../handler-exceptions/http-exception.provider';
 import { HttpStatus } from '../utils/enums/http-status.enum';
@@ -57,11 +58,28 @@ export class CourseService {
   }  
    
 
-  async update( id: string,{name, description,value, image, disponibility, categoryId}: CreateCourseDto): Promise<void>{
-    try{
-      await this.courseRepository.update(id, {name, description, value, image, disponibility, category:{ id: categoryId}});
-    } catch (error) {
+  async update( id: string,{name, description,value, image, disponibility, categoryId}: Partial<UpdateCourseDto>): Promise<void>{
+    const oldCourse = await this.courseRepository.findOne({ where: { id } });
+    if (!oldCourse ) {
+      throw new HttpException('Curso não encontrado!', HttpStatus.NOT_FOUND);
+    }
+   try{
+      const updateCourse = this.courseRepository.merge(oldCourse, {
+        description,
+        disponibility,
+        image,
+        name,
+        value,
+        category: { id: categoryId },
+      });
+      await this.courseRepository.save(updateCourse);}
+    // try{
+    //   await this.courseRepository.update(id, {name, description, value, image, disponibility, category:{ id: categoryId}});
+      
+     catch (error) {
+      console.log(error)
       throw new HttpException('Houve um erro ao atualizar curso!', HttpStatus.BAD_REQUEST);
+      
     }
   
 }
